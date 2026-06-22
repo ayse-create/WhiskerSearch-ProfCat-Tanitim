@@ -282,6 +282,7 @@
       border: 2px solid #eee;
       transition: all 0.3s;
       background: #fafafa;
+      cursor: pointer;
     }
 
     .image-card:hover {
@@ -295,6 +296,7 @@
       height: 150px;
       object-fit: cover;
       display: block;
+      cursor: pointer;
     }
 
     .image-card .label {
@@ -376,6 +378,54 @@
       overflow-x: auto;
     }
 
+    /* LIGHTBOX (Tam Ekran Görsel) */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.92);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.5);
+      cursor: default;
+    }
+
+    .lightbox .close-btn {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      color: white;
+      font-size: 44px;
+      font-weight: 300;
+      cursor: pointer;
+      transition: 0.3s;
+      z-index: 10000;
+      background: none;
+      border: none;
+      font-family: Arial, sans-serif;
+    }
+
+    .lightbox .close-btn:hover {
+      transform: rotate(90deg);
+      color: #FFD1E8;
+    }
+
     @media (max-width: 600px) {
       .page-content { padding: 20px; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
@@ -383,6 +433,7 @@
       .image-grid { grid-template-columns: 1fr 1fr; }
       .image-grid-2 { grid-template-columns: 1fr; }
       .image-card img { height: 120px; }
+      .lightbox .close-btn { top: 20px; right: 20px; font-size: 32px; }
     }
   </style>
 </head>
@@ -416,6 +467,12 @@
     </div>
   </div>
 
+</div>
+
+<!-- LIGHTBOX (Tam Ekran Görsel) -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="close-btn" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="Büyük Görsel">
 </div>
 
 <script>
@@ -473,6 +530,13 @@ function goBack() {
           }
         };
       });
+      // Lightbox için tıklama olaylarını yeniden bağla
+      document.querySelectorAll('.image-card img').forEach(img => {
+        img.onclick = function(e) {
+          e.stopPropagation();
+          openLightbox(this.src);
+        };
+      });
     }
   } else {
     alert('🐱 Ana sayfadasınız, geri gidilecek sayfa yok!');
@@ -503,6 +567,12 @@ function goForward() {
             content.classList.toggle('open');
             if (arrow) arrow.classList.toggle('open');
           }
+        };
+      });
+      document.querySelectorAll('.image-card img').forEach(img => {
+        img.onclick = function(e) {
+          e.stopPropagation();
+          openLightbox(this.src);
         };
       });
     }
@@ -720,6 +790,30 @@ document.addEventListener('keydown', function(e) {
 }, true);
 
 // ============================================
+// LIGHTBOX (Tam Ekran Görsel) SİSTEMİ
+// ============================================
+function openLightbox(src) {
+  const lightbox = document.getElementById('lightbox');
+  const img = document.getElementById('lightboxImg');
+  img.src = src;
+  lightbox.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  lightbox.classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+// ESC tuşu ile kapatma
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeLightbox();
+  }
+});
+
+// ============================================
 // SAYFA İÇERİKLERİ (SENİN KLASÖR YAPINA GÖRE)
 // ============================================
 
@@ -732,15 +826,15 @@ function openInfo() {
       <h2>🔍 Sahte Arama Motoru</h2>
       <div class="image-grid">
         <div class="image-card">
-          <img src="images/arama/1.png" alt="Arama 1" loading="lazy">
+          <img src="images/arama/1.png" alt="Arama 1" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 1</div>
         </div>
         <div class="image-card">
-          <img src="images/arama/2.png" alt="Arama 2" loading="lazy">
+          <img src="images/arama/2.png" alt="Arama 2" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 2</div>
         </div>
         <div class="image-card">
-          <img src="images/arama/3.png" alt="Arama 3" loading="lazy">
+          <img src="images/arama/3.png" alt="Arama 3" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 3</div>
         </div>
       </div>
@@ -754,15 +848,15 @@ function openInfo() {
         <div class="gallery-content" id="gallery-asama1">
           <div class="image-grid">
             <div class="image-card">
-              <img src="images/asama1/1.png" alt="Asama1 1" loading="lazy">
+              <img src="images/asama1/1.png" alt="Asama1 1" loading="lazy" onclick="openLightbox(this.src)">
               <div class="label">📸 1</div>
             </div>
             <div class="image-card">
-              <img src="images/asama1/2.png" alt="Asama1 2" loading="lazy">
+              <img src="images/asama1/2.png" alt="Asama1 2" loading="lazy" onclick="openLightbox(this.src)">
               <div class="label">📸 2</div>
             </div>
             <div class="image-card">
-              <img src="images/asama1/3.png" alt="Asama1 3" loading="lazy">
+              <img src="images/asama1/3.png" alt="Asama1 3" loading="lazy" onclick="openLightbox(this.src)">
               <div class="label">📸 3</div>
             </div>
           </div>
@@ -775,11 +869,11 @@ function openInfo() {
         <div class="gallery-content" id="gallery-asama2">
           <div class="image-grid-2">
             <div class="image-card">
-              <img src="images/asama2/1.png" alt="Asama2 1" loading="lazy">
+              <img src="images/asama2/1.png" alt="Asama2 1" loading="lazy" onclick="openLightbox(this.src)">
               <div class="label">📸 1</div>
             </div>
             <div class="image-card">
-              <img src="images/asama2/2.png" alt="Asama2 2" loading="lazy">
+              <img src="images/asama2/2.png" alt="Asama2 2" loading="lazy" onclick="openLightbox(this.src)">
               <div class="label">📸 2</div>
             </div>
           </div>
@@ -792,15 +886,15 @@ function openInfo() {
         <div class="gallery-content" id="gallery-asama3">
           <div class="image-grid">
             <div class="image-card">
-              <img src="images/asama3/1.png" alt="Asama3 1" loading="lazy">
+              <img src="images/asama3/1.png" alt="Asama3 1" loading="lazy" onclick="openLightbox(this.src)">
               <div class="label">📸 1</div>
             </div>
             <div class="image-card">
-              <img src="images/asama3/2.png" alt="Asama3 2" loading="lazy">
+              <img src="images/asama3/2.png" alt="Asama3 2" loading="lazy" onclick="openLightbox(this.src)">
               <div class="label">📸 2</div>
             </div>
             <div class="image-card">
-              <img src="images/asama3/3.png" alt="Asama3 3" loading="lazy">
+              <img src="images/asama3/3.png" alt="Asama3 3" loading="lazy" onclick="openLightbox(this.src)">
               <div class="label">📸 3</div>
             </div>
           </div>
@@ -813,15 +907,15 @@ function openInfo() {
         <div class="gallery-content" id="gallery-asama4">
           <div class="image-grid">
             <div class="image-card">
-              <img src="images/asama4/1.png" alt="Asama4 1" loading="lazy">
+              <img src="images/asama4/1.png" alt="Asama4 1" loading="lazy" onclick="openLightbox(this.src)">
               <div class="label">📸 1</div>
             </div>
             <div class="image-card">
-              <img src="images/asama4/2.png" alt="Asama4 2" loading="lazy">
+              <img src="images/asama4/2.png" alt="Asama4 2" loading="lazy" onclick="openLightbox(this.src)">
               <div class="label">📸 2</div>
             </div>
             <div class="image-card">
-              <img src="images/asama4/3.png" alt="Asama4 3" loading="lazy">
+              <img src="images/asama4/3.png" alt="Asama4 3" loading="lazy" onclick="openLightbox(this.src)">
               <div class="label">📸 3</div>
             </div>
           </div>
@@ -859,11 +953,11 @@ function openTerminal() {
 
       <div class="image-grid-2">
         <div class="image-card">
-          <img src="images/terminal/1.png" alt="Terminal 1" loading="lazy">
+          <img src="images/terminal/1.png" alt="Terminal 1" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 1</div>
         </div>
         <div class="image-card">
-          <img src="images/terminal/2.png" alt="Terminal 2" loading="lazy">
+          <img src="images/terminal/2.png" alt="Terminal 2" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 2</div>
         </div>
       </div>
@@ -897,7 +991,7 @@ function open404() {
       <p><strong>WhiskerSearch 404 sayfası</strong>, kullanıcı yanlış bir sayfaya girdiğinde karşısına çıkan eğlenceli hata ekranıdır.</p>
 
       <div class="image-card" style="max-width:400px; margin:0 auto 20px;">
-        <img src="images/404/1.png" alt="404" loading="lazy">
+        <img src="images/404/1.png" alt="404" loading="lazy" onclick="openLightbox(this.src)">
         <div class="label">📸 404</div>
       </div>
 
@@ -926,11 +1020,11 @@ function openContact() {
 
       <div class="image-grid-2">
         <div class="image-card">
-          <img src="images/contact/1.png" alt="Contact 1" loading="lazy">
+          <img src="images/contact/1.png" alt="Contact 1" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 1</div>
         </div>
         <div class="image-card">
-          <img src="images/contact/2.png" alt="Contact 2" loading="lazy">
+          <img src="images/contact/2.png" alt="Contact 2" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 2</div>
         </div>
       </div>
@@ -965,11 +1059,11 @@ function openFeedback() {
 
       <div class="image-grid-2">
         <div class="image-card">
-          <img src="images/feedback/1.png" alt="Feedback 1" loading="lazy">
+          <img src="images/feedback/1.png" alt="Feedback 1" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 1</div>
         </div>
         <div class="image-card">
-          <img src="images/feedback/2.png" alt="Feedback 2" loading="lazy">
+          <img src="images/feedback/2.png" alt="Feedback 2" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 2</div>
         </div>
       </div>
@@ -998,7 +1092,7 @@ function openCatAI() {
       <p>WhiskerSearch'ün <strong>yapay zeka asistanı</strong>. Henüz Türkçe cümle kurmakta zorlanıyor, ancak <strong style="color:#6c5ce7;">matematiksel işlemlerinde başarılı</strong>.</p>
 
       <div class="image-card" style="max-width:400px; margin:0 auto 20px;">
-        <img src="images/cat-ai/1.png" alt="Cat-AI" loading="lazy">
+        <img src="images/cat-ai/1.png" alt="Cat-AI" loading="lazy" onclick="openLightbox(this.src)">
         <div class="label">📸 Cat-AI</div>
       </div>
 
@@ -1034,15 +1128,15 @@ function openStats() {
 
       <div class="image-grid">
         <div class="image-card">
-          <img src="images/stats/1.png" alt="Stats 1" loading="lazy">
+          <img src="images/stats/1.png" alt="Stats 1" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 1</div>
         </div>
         <div class="image-card">
-          <img src="images/stats/2.png" alt="Stats 2" loading="lazy">
+          <img src="images/stats/2.png" alt="Stats 2" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 2</div>
         </div>
         <div class="image-card">
-          <img src="images/stats/3.png" alt="Stats 3" loading="lazy">
+          <img src="images/stats/3.png" alt="Stats 3" loading="lazy" onclick="openLightbox(this.src)">
           <div class="label">📸 3</div>
         </div>
       </div>

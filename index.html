@@ -262,55 +262,11 @@
       text-decoration: underline;
     }
 
-    .image-placeholder {
-      width: 100%;
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 25px;
-      border: 3px dashed #ccc;
-      background: #fafafa;
-      min-height: 200px;
-      font-size: 60px;
-      color: rgba(0,0,0,0.2);
-      transition: all 0.3s;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .image-placeholder:hover {
-      border-color: #D8C7FF;
-      background: #f5f0ff;
-    }
-
-    .image-placeholder .hint {
-      font-size: 14px;
-      color: #aaa;
-      margin-top: 8px;
-    }
-
-    .image-placeholder.small {
-      min-height: 150px;
-      font-size: 40px;
-    }
-
-    .image-placeholder.tall {
-      min-height: 300px;
-    }
-
     .image-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 15px;
       margin-bottom: 20px;
-    }
-
-    .image-grid .image-placeholder {
-      min-height: 150px;
-      font-size: 40px;
-      margin-bottom: 0;
     }
 
     .image-grid-2 {
@@ -320,10 +276,33 @@
       margin-bottom: 20px;
     }
 
-    .image-grid-2 .image-placeholder {
-      min-height: 150px;
-      font-size: 40px;
-      margin-bottom: 0;
+    .image-card {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid #eee;
+      transition: all 0.3s;
+      background: #fafafa;
+    }
+
+    .image-card:hover {
+      border-color: #D8C7FF;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .image-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .image-card .label {
+      padding: 8px 12px;
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      background: #fafafa;
     }
 
     .gallery-toggle {
@@ -401,9 +380,9 @@
       .page-content { padding: 20px; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
       .page-content h1 { font-size: 24px; }
-      .image-placeholder { min-height: 150px; font-size: 40px; }
       .image-grid { grid-template-columns: 1fr 1fr; }
       .image-grid-2 { grid-template-columns: 1fr; }
+      .image-card img { height: 120px; }
     }
   </style>
 </head>
@@ -741,7 +720,7 @@ document.addEventListener('keydown', function(e) {
 }, true);
 
 // ============================================
-// SAYFA İÇERİKLERİ
+// SAYFA İÇERİKLERİ (SENİN KLASÖR YAPINA GÖRE)
 // ============================================
 
 function openInfo() {
@@ -752,9 +731,18 @@ function openInfo() {
 
       <h2>🔍 Sahte Arama Motoru</h2>
       <div class="image-grid">
-        <div class="image-placeholder">📸 1<br><span class="hint">arama/1.png</span></div>
-        <div class="image-placeholder">📸 2<br><span class="hint">arama/2.png</span></div>
-        <div class="image-placeholder">📸 3<br><span class="hint">arama/3.png</span></div>
+        <div class="image-card">
+          <img src="images/arama/1.png" alt="Arama 1" loading="lazy">
+          <div class="label">📸 1</div>
+        </div>
+        <div class="image-card">
+          <img src="images/arama/2.png" alt="Arama 2" loading="lazy">
+          <div class="label">📸 2</div>
+        </div>
+        <div class="image-card">
+          <img src="images/arama/3.png" alt="Arama 3" loading="lazy">
+          <div class="label">📸 3</div>
+        </div>
       </div>
       <p>Ne ararsanız arayın, sonuçlar ProfessorCat tarafından işlenmiştir.</p>
 
@@ -765,9 +753,18 @@ function openInfo() {
         <p>Ödev, sınav ve word görevlerinde yardım</p>
         <div class="gallery-content" id="gallery-asama1">
           <div class="image-grid">
-            <div class="image-placeholder">📸 1<br><span class="hint">asama1/1.png</span></div>
-            <div class="image-placeholder">📸 2<br><span class="hint">asama1/2.png</span></div>
-            <div class="image-placeholder">📸 3<br><span class="hint">asama1/3.png</span></div>
+            <div class="image-card">
+              <img src="images/asama1/1.png" alt="Asama1 1" loading="lazy">
+              <div class="label">📸 1</div>
+            </div>
+            <div class="image-card">
+              <img src="images/asama1/2.png" alt="Asama1 2" loading="lazy">
+              <div class="label">📸 2</div>
+            </div>
+            <div class="image-card">
+              <img src="images/asama1/3.png" alt="Asama1 3" loading="lazy">
+              <div class="label">📸 3</div>
+            </div>
           </div>
         </div>
       </div>
@@ -777,8 +774,14 @@ function openInfo() {
         <p>Ağaç dikme, atık ayırma, israfları bulma</p>
         <div class="gallery-content" id="gallery-asama2">
           <div class="image-grid-2">
-            <div class="image-placeholder">📸 1<br><span class="hint">asama2/1.png</span></div>
-            <div class="image-placeholder">📸 2<br><span class="hint">asama2/2.png</span></div>
+            <div class="image-card">
+              <img src="images/asama2/1.png" alt="Asama2 1" loading="lazy">
+              <div class="label">📸 1</div>
+            </div>
+            <div class="image-card">
+              <img src="images/asama2/2.png" alt="Asama2 2" loading="lazy">
+              <div class="label">📸 2</div>
+            </div>
           </div>
         </div>
       </div>
@@ -788,9 +791,18 @@ function openInfo() {
         <p>Salata, hamburger ve pizza yapımı</p>
         <div class="gallery-content" id="gallery-asama3">
           <div class="image-grid">
-            <div class="image-placeholder">📸 1<br><span class="hint">asama3/1.png</span></div>
-            <div class="image-placeholder">📸 2<br><span class="hint">asama3/2.png</span></div>
-            <div class="image-placeholder">📸 3<br><span class="hint">asama3/3.png</span></div>
+            <div class="image-card">
+              <img src="images/asama3/1.png" alt="Asama3 1" loading="lazy">
+              <div class="label">📸 1</div>
+            </div>
+            <div class="image-card">
+              <img src="images/asama3/2.png" alt="Asama3 2" loading="lazy">
+              <div class="label">📸 2</div>
+            </div>
+            <div class="image-card">
+              <img src="images/asama3/3.png" alt="Asama3 3" loading="lazy">
+              <div class="label">📸 3</div>
+            </div>
           </div>
         </div>
       </div>
@@ -800,9 +812,18 @@ function openInfo() {
         <p>Salon, mutfak, yatak odası temizliği</p>
         <div class="gallery-content" id="gallery-asama4">
           <div class="image-grid">
-            <div class="image-placeholder">📸 1<br><span class="hint">asama4/1.png</span></div>
-            <div class="image-placeholder">📸 2<br><span class="hint">asama4/2.png</span></div>
-            <div class="image-placeholder">📸 3<br><span class="hint">asama4/3.png</span></div>
+            <div class="image-card">
+              <img src="images/asama4/1.png" alt="Asama4 1" loading="lazy">
+              <div class="label">📸 1</div>
+            </div>
+            <div class="image-card">
+              <img src="images/asama4/2.png" alt="Asama4 2" loading="lazy">
+              <div class="label">📸 2</div>
+            </div>
+            <div class="image-card">
+              <img src="images/asama4/3.png" alt="Asama4 3" loading="lazy">
+              <div class="label">📸 3</div>
+            </div>
           </div>
         </div>
       </div>
@@ -836,9 +857,15 @@ function openTerminal() {
       <h1>🖥️ Terminal Sistemi</h1>
       <p>Terminal, görsel düğmeler veya grafiksel arayüzler kullanmadan, <strong>yalnızca klavyeden girilen komutlarla</strong> bilgisayarın işletim sistemine erişmeyi sağlayan bir araçtır.</p>
 
-      <div class="image-grid">
-        <div class="image-placeholder">📸 1<br><span class="hint">terminal/1.png</span></div>
-        <div class="image-placeholder">📸 2<br><span class="hint">terminal/2.png</span></div>
+      <div class="image-grid-2">
+        <div class="image-card">
+          <img src="images/terminal/1.png" alt="Terminal 1" loading="lazy">
+          <div class="label">📸 1</div>
+        </div>
+        <div class="image-card">
+          <img src="images/terminal/2.png" alt="Terminal 2" loading="lazy">
+          <div class="label">📸 2</div>
+        </div>
       </div>
 
       <div class="info-card highlight">
@@ -869,7 +896,10 @@ function open404() {
       <h1>❓ 404 Sayfası</h1>
       <p><strong>WhiskerSearch 404 sayfası</strong>, kullanıcı yanlış bir sayfaya girdiğinde karşısına çıkan eğlenceli hata ekranıdır.</p>
 
-      <div class="image-placeholder">📸 1<br><span class="hint">404/1.png</span></div>
+      <div class="image-card" style="max-width:400px; margin:0 auto 20px;">
+        <img src="images/404/1.png" alt="404" loading="lazy">
+        <div class="label">📸 404</div>
+      </div>
 
       <div class="info-card highlight" style="border-color:#FF6B6B; background:#fff5f5;">
         <h2>🐾 Ekran Mesajı</h2>
@@ -895,8 +925,14 @@ function openContact() {
       <p>Kullanıcıların <strong>WhiskerSearch ekibiyle hızlı şekilde iletişime geçebilmesi</strong> için oluşturulmuştur.</p>
 
       <div class="image-grid-2">
-        <div class="image-placeholder">📸 1<br><span class="hint">contact/1.png</span></div>
-        <div class="image-placeholder">📸 2<br><span class="hint">contact/2.png</span></div>
+        <div class="image-card">
+          <img src="images/contact/1.png" alt="Contact 1" loading="lazy">
+          <div class="label">📸 1</div>
+        </div>
+        <div class="image-card">
+          <img src="images/contact/2.png" alt="Contact 2" loading="lazy">
+          <div class="label">📸 2</div>
+        </div>
       </div>
 
       <div class="info-card highlight" style="border-color:#0984e3; background:#f0f8ff;">
@@ -928,8 +964,14 @@ function openFeedback() {
       <p>Kullanıcıların WhiskerSearch hakkında deneyimlerini paylaşabildiği etkileşimli bir alandır.</p>
 
       <div class="image-grid-2">
-        <div class="image-placeholder">📸 1<br><span class="hint">feedback/1.png</span></div>
-        <div class="image-placeholder">📸 2<br><span class="hint">feedback/2.png</span></div>
+        <div class="image-card">
+          <img src="images/feedback/1.png" alt="Feedback 1" loading="lazy">
+          <div class="label">📸 1</div>
+        </div>
+        <div class="image-card">
+          <img src="images/feedback/2.png" alt="Feedback 2" loading="lazy">
+          <div class="label">📸 2</div>
+        </div>
       </div>
 
       <div class="info-card highlight" style="border-color:#f39c12; background:#fffbeb;">
@@ -955,7 +997,10 @@ function openCatAI() {
       <h1>🤖 Cat-AI</h1>
       <p>WhiskerSearch'ün <strong>yapay zeka asistanı</strong>. Henüz Türkçe cümle kurmakta zorlanıyor, ancak <strong style="color:#6c5ce7;">matematiksel işlemlerinde başarılı</strong>.</p>
 
-      <div class="image-placeholder">📸 1<br><span class="hint">cat-ai/1.png</span></div>
+      <div class="image-card" style="max-width:400px; margin:0 auto 20px;">
+        <img src="images/cat-ai/1.png" alt="Cat-AI" loading="lazy">
+        <div class="label">📸 Cat-AI</div>
+      </div>
 
       <div class="info-card highlight" style="border-color:#6c5ce7; background:#f3f0ff;">
         <h2>🧮 Yetenekleri</h2>
@@ -988,9 +1033,18 @@ function openStats() {
       <p><strong>Google Search Console</strong> ve <strong>Google Business</strong> entegrasyonu ile WhiskerSearch-ProfCat'in performans verileri.</p>
 
       <div class="image-grid">
-        <div class="image-placeholder">📸 1<br><span class="hint">stats/1.png</span></div>
-        <div class="image-placeholder">📸 2<br><span class="hint">stats/2.png</span></div>
-        <div class="image-placeholder">📸 3<br><span class="hint">stats/3.png</span></div>
+        <div class="image-card">
+          <img src="images/stats/1.png" alt="Stats 1" loading="lazy">
+          <div class="label">📸 1</div>
+        </div>
+        <div class="image-card">
+          <img src="images/stats/2.png" alt="Stats 2" loading="lazy">
+          <div class="label">📸 2</div>
+        </div>
+        <div class="image-card">
+          <img src="images/stats/3.png" alt="Stats 3" loading="lazy">
+          <div class="label">📸 3</div>
+        </div>
       </div>
 
       <div class="stats-grid">

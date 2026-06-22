@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="google-site-verification" content="hPq_WPZAvU4KE1qqk9TOxsd2XuAZEduUX5T1LQYAd-A" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhiskerSearch🐱🔎</title>
+  <link rel="icon" href="images/whiskersearch-tatli-arama.ico" type="image/x-icon" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: #f0f0f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .browser-container {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      background: white;
+    }
+
+    .demo-warning {
+      background: linear-gradient(135deg, #CFEFFF, #D8C7FF, #FFD1E8);
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .browser-header {
+      background: #f8f9fa;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 12px 16px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .browser-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-button {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #d0d0d0;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .nav-button:hover {
+      background: #e8e8e8;
+    }
+
+    .address-bar {
+      flex: 1;
+      background: #f0f0f0;
+      border: 1px solid #d0d0d0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .address-bar-icon {
+      color: #666;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .address-bar-url {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .browser-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .search-page {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+    }
+
+    .search-logo {
+      font-size: 64px;
+      margin-bottom: 30px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .search-box {
+      display: flex;
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 30px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 14px 18px;
+      border: 2px solid #e0e0e0;
+      border-radius: 50px 0 0 50px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .search-input:focus {
+      border-color: #D8C7FF;
+    }
+
+    .search-button {
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #CFEFFF, #D8C7FF, #FFD1E8);
+      border: none;
+      border-radius: 0 50px 50px 0;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .search-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .results-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: white;
+      height: 100%;
+    }
+
+    .result-item {
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 12px;
+      border-left: 4px solid #D8C7FF;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    .result-item:hover {
+      background: #f0f0f0;
+      transform: translateX(5px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .result-url {
+      font-size: 13px;
+      color: #06b6d4;
+      margin-bottom: 8px;
+    }
+
+    .result-title {
+      font-size: 18px;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .result-description {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .page-content {
+      padding: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .page-content h1 {
+      font-size: 32px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .page-content h2 {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 8px;
+      margin-top: 20px;
+    }
+
+    .page-content p {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.7;
+      margin-bottom: 15px;
+    }
+
+    .page-content ul {
+      font-size: 16px;
+      color: #666;
+      line-height: 2;
+      padding-left: 20px;
+    }
+
+    .page-content a {
+      color: #D8C7FF;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .page-content a:hover {
+      text-decoration: underline;
+    }
+
+    .image-placeholder {
+      width: 100%;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      border: 3px dashed #ccc;
+      background: #fafafa;
+      min-height: 200px;
+      font-size: 60px;
+      color: rgba(0,0,0,0.2);
+      transition: all 0.3s;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .image-placeholder:hover {
+      border-color: #D8C7FF;
+      background: #f5f0ff;
+    }
+
+    .image-placeholder .hint {
+      font-size: 14px;
+      color: #aaa;
+      margin-top: 8px;
+    }
+
+    .image-placeholder.small {
+      min-height: 150px;
+      font-size: 40px;
+    }
+
+    .image-placeholder.tall {
+      min-height: 300px;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .image-grid .image-placeholder {
+      min-height: 150px;
+      font-size: 40px;
+      margin-bottom: 0;
+    }
+
+    .image-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .image-grid-2 .image-placeholder {
+      min-height: 150px;
+      font-size: 40px;
+      margin-bottom: 0;
+    }
+
+    .gallery-toggle {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .gallery-toggle .arrow {
+      display: inline-block;
+      transition: transform 0.3s;
+    }
+
+    .gallery-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+
+    .gallery-content {
+      display: none;
+      margin-top: 15px;
+    }
+
+    .gallery-content.open {
+      display: block;
+    }
+
+    .info-card {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .info-card.highlight {
+      border-left: 4px solid #D8C7FF;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stats-item {
+      background: #e8f8f5;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stats-item .number {
+      font-size: 32px;
+      font-weight: 700;
+      color: #00b894;
+    }
+
+    .stats-item .label {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .terminal-box {
+      background: #2d2d2d;
+      color: #00ff41;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      margin-top: 10px;
+      overflow-x: auto;
+    }
+
+    @media (max-width: 600px) {
+      .page-content { padding: 20px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .page-content h1 { font-size: 24px; }
+      .image-placeholder { min-height: 150px; font-size: 40px; }
+      .image-grid { grid-template-columns: 1fr 1fr; }
+      .image-grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="browser-container">
+  
+  <div class="demo-warning">
+    ⚠️ Bu bir demo/tarayıcı simülasyonudur - Eğlence amaçlıdır
+  </div>
+
+  <div class="browser-header">
+    <div class="browser-buttons">
+      <button class="nav-button" onclick="goBack()">←</button>
+      <button class="nav-button" onclick="goForward()">→</button>
+      <button class="nav-button" onclick="reload()">↻</button>
+    </div>
+    <div class="address-bar">
+      <span class="address-bar-icon">🔒</span>
+      <span class="address-bar-url" id="addressBarUrl">https://ayse-create.github.io/WhiskerSearch-ProfCat</span>
+    </div>
+  </div>
+
+  <div class="browser-content" id="browserContent">
+    <div class="search-page" id="searchPage">
+      <div class="search-logo">🐱</div>
+      <div class="search-box">
+        <input type="text" class="search-input" id="searchInput" placeholder="ProfessorCat'ta ara..." onkeypress="handleSearch(event)">
+        <button class="search-button" onclick="performSearch()">Ara</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================
+// TARAYICI GEÇMİŞİ SİSTEMİ
+// ============================================
+let historyStack = [];
+let historyIndex = -1;
+
+function pushState(page, query, content, title) {
+  historyStack = historyStack.slice(0, historyIndex + 1);
+  historyStack.push({ page, query, content, title });
+  historyIndex = historyStack.length - 1;
+  updateAddressBar(query, title);
+}
+
+function updateAddressBar(query, title) {
+  const urlEl = document.getElementById('addressBarUrl');
+  if (!urlEl) return;
+  if (query) {
+    urlEl.textContent = `https://ayse-create.github.io/WhiskerSearch-ProfCat/search?q=${encodeURIComponent(query)}`;
+  } else if (title) {
+    urlEl.textContent = `https://ayse-create.github.io/WhiskerSearch-ProfCat/${title}`;
+  } else {
+    urlEl.textContent = 'https://ayse-create.github.io/WhiskerSearch-ProfCat';
+  }
+}
+
+// ============================================
+// GEZİNME FONKSİYONLARI
+// ============================================
+function goBack() {
+  if (historyIndex > 0) {
+    historyIndex--;
+    const entry = historyStack[historyIndex];
+    if (entry) {
+      const box = document.getElementById('browserContent');
+      box.innerHTML = entry.content;
+      updateAddressBar(entry.query, entry.title);
+      
+      if (entry.page === 'results') {
+        document.querySelectorAll('.result-item').forEach(el => {
+          const onclick = el.getAttribute('onclick');
+          if (onclick) el.onclick = new Function(onclick);
+        });
+      }
+      document.querySelectorAll('.gallery-toggle').forEach(el => {
+        el.onclick = function() {
+          const target = this.getAttribute('data-target');
+          const content = document.getElementById(target);
+          const arrow = this.querySelector('.arrow');
+          if (content) {
+            content.classList.toggle('open');
+            if (arrow) arrow.classList.toggle('open');
+          }
+        };
+      });
+    }
+  } else {
+    alert('🐱 Ana sayfadasınız, geri gidilecek sayfa yok!');
+  }
+}
+
+function goForward() {
+  if (historyIndex < historyStack.length - 1) {
+    historyIndex++;
+    const entry = historyStack[historyIndex];
+    if (entry) {
+      const box = document.getElementById('browserContent');
+      box.innerHTML = entry.content;
+      updateAddressBar(entry.query, entry.title);
+      
+      if (entry.page === 'results') {
+        document.querySelectorAll('.result-item').forEach(el => {
+          const onclick = el.getAttribute('onclick');
+          if (onclick) el.onclick = new Function(onclick);
+        });
+      }
+      document.querySelectorAll('.gallery-toggle').forEach(el => {
+        el.onclick = function() {
+          const target = this.getAttribute('data-target');
+          const content = document.getElementById(target);
+          const arrow = this.querySelector('.arrow');
+          if (content) {
+            content.classList.toggle('open');
+            if (arrow) arrow.classList.toggle('open');
+          }
+        };
+      });
+    }
+  } else {
+    alert('🐱 İleri gidilecek sayfa yok!');
+  }
+}
+
+function reload() {
+  location.reload();
+}
+
+// ============================================
+// ANA SAYFA
+// ============================================
+function goHome() {
+  const box = document.getElementById('browserContent');
+  if (!box) return;
+  
+  const content = `
+    <div class="search-page" id="searchPage">
+      <div class="search-logo">🐱</div>
+      <div class="search-box">
+        <input type="text" class="search-input" id="searchInput" placeholder="ProfessorCat'ta ara..." onkeypress="handleSearch(event)">
+        <button class="search-button" onclick="performSearch()">Ara</button>
+      </div>
+    </div>
+  `;
+  
+  box.innerHTML = content;
+  pushState('home', '', content, '');
+  
+  setTimeout(() => {
+    const input = document.getElementById('searchInput');
+    if (input) input.focus();
+  }, 100);
+}
+
+// ============================================
+// ARAMA FONKSİYONLARI
+// ============================================
+let lastSearchQuery = '';
+
+function handleSearch(event) {
+  if (event.key === 'Enter') performSearch();
+}
+
+function performSearch(query) {
+  const input = document.getElementById('searchInput');
+  
+  if (query !== undefined) {
+    if (input) input.value = query;
+    lastSearchQuery = query.toLowerCase();
+  } else {
+    if (!input) return;
+    const q = input.value.trim();
+    if (!q) return;
+    lastSearchQuery = q.toLowerCase();
+  }
+
+  showResults();
+}
+
+function showResults() {
+  const box = document.getElementById('browserContent');
+  if (!box) return;
+
+  let results = [];
+  let pageTitle = '';
+
+  // 1. WhiskerSearch Nedir?
+  if (lastSearchQuery.includes("whiskersearch") && 
+      (lastSearchQuery.includes("nedir") || lastSearchQuery.includes("ne") || lastSearchQuery.includes("hakkında"))) {
+    results.push({
+      title: "🐱 WhiskerSearch Nedir?",
+      url: "whiskersearch.com › hakkında",
+      desc: "ProfessorCat tarafından işlenen eğlenceli arama deneyimi. Ödev, çevre, restoran ve ev düzenleme oyunlarıyla dolu bir dünya.",
+      action: "openInfo"
+    });
+    pageTitle = 'WhiskerSearch Nedir?';
+  }
+
+  // 2. Diğer Sayfalar (5 sonuç)
+  if (lastSearchQuery.includes("diğer sayfalar") || 
+      lastSearchQuery.includes("sayfalar") ||
+      (lastSearchQuery.includes("whiskersearch") && lastSearchQuery.includes("sayfa"))) {
+    results.push(
+      {
+        title: "🖥️ Terminal Sistemi",
+        url: "whiskersearch.com › terminal",
+        desc: "Klavye komutlarıyla çalışan, gizli içeriklerin keşfedildiği terminal deneyimi.",
+        action: "openTerminal"
+      },
+      {
+        title: "❓ 404 Sayfası",
+        url: "whiskersearch.com › 404",
+        desc: "Kaybolmuş pati izlerinin peşinde... WhiskerSearch'ün eğlenceli 404 hata sayfası teması.",
+        action: "open404"
+      },
+      {
+        title: "📧 İletişim Sayfası",
+        url: "whiskersearch.com › contact",
+        desc: "Hızlı iletişim için 'İletişim Kur' butonu ile e-posta gönderme sistemi.",
+        action: "openContact"
+      },
+      {
+        title: "⭐ Feedback (Geri Bildirim)",
+        url: "whiskersearch.com › feedback",
+        desc: "Kedi slider ile puanlama, yorumlar ve Google Sheets entegrasyonu.",
+        action: "openFeedback"
+      },
+      {
+        title: "🤖 Cat-AI",
+        url: "whiskersearch.com › cat-ai",
+        desc: "Henüz Türkçe'yi öğrenen ama matematikte başarılı yapay zeka asistanı.",
+        action: "openCatAI"
+      }
+    );
+    pageTitle = 'Diğer Sayfalar';
+  }
+
+  // 3. Performans İstatistikleri
+  if (lastSearchQuery.includes("performans") || 
+      lastSearchQuery.includes("istatistik") || 
+      lastSearchQuery.includes("google") || 
+      lastSearchQuery.includes("gsc") ||
+      lastSearchQuery.includes("business")) {
+    results.push({
+      title: "📊 Performans İstatistikleri",
+      url: "whiskersearch.com › istatistik",
+      desc: "Google Search Console verileri: 36 Tıklanma, 95 Gösterim, %37,9 CTR, Ortalama Konum 1,3. Google Business entegrasyonu.",
+      action: "openStats"
+    });
+    pageTitle = 'Performans İstatistikleri';
+  }
+
+  // 4. Kaynakça
+  if (lastSearchQuery.includes("kaynakça") || 
+      lastSearchQuery.includes("referans") ||
+      lastSearchQuery.includes("kaynak")) {
+    results.push({
+      title: "📚 Kaynakça / Referanslar",
+      url: "whiskersearch.com › kaynakca",
+      desc: "WhiskerSearch-ProfCat projesinde kullanılan kaynaklar, teknolojiler ve ilham alınan çalışmalar.",
+      action: "openReferences"
+    });
+    pageTitle = 'Kaynakça';
+  }
+
+  // Eğer hiçbir sonuç bulunamazsa
+  if (results.length === 0) {
+    results.push({
+      title: "🐾 Sonuç bulunamadı",
+      url: "whiskersearch.com › arama",
+      desc: "ProfessorCat bu konuyu henüz keşfetmedi. Farklı bir kelime deneyin miyav!",
+      action: "goHome"
+    });
+    pageTitle = 'Sonuç bulunamadı';
+  }
+
+  // Sonuçları ekrana yaz
+  let html = '<div class="results-container" id="resultsContainer">';
+  results.forEach(r => {
+    html += `
+      <div class="result-item" onclick="${r.action}()">
+        <div class="result-url">${r.url}</div>
+        <div class="result-title">${r.title}</div>
+        <div class="result-description">${r.desc}</div>
+      </div>
+    `;
+  });
+  html += '</div>';
+  box.innerHTML = html;
+
+  pushState('results', lastSearchQuery, html, pageTitle);
+}
+
+// ============================================
+// KLAVYE KISAYOLLARI
+// ============================================
+document.addEventListener('keydown', function(e) {
+  const key = e.key;
+  
+  if (e.target && e.target.tagName === 'INPUT') {
+    return;
+  }
+
+  switch(key) {
+    case '1':
+      e.preventDefault();
+      e.stopPropagation();
+      performSearch('whiskersearch nedir');
+      break;
+    case '2':
+      e.preventDefault();
+      e.stopPropagation();
+      performSearch('whiskersearch diğer sayfalar');
+      break;
+    case '3':
+      e.preventDefault();
+      e.stopPropagation();
+      performSearch('performans istatistikleri');
+      break;
+    case '4':
+      e.preventDefault();
+      e.stopPropagation();
+      performSearch('kaynakça');
+      break;
+    case '0':
+      e.preventDefault();
+      e.stopPropagation();
+      goHome();
+      break;
+  }
+}, true);
+
+// ============================================
+// SAYFA İÇERİKLERİ
+// ============================================
+
+function openInfo() {
+  const content = `
+    <div class="page-content">
+      <h1>🐱 WhiskerSearch Nedir?</h1>
+      <p><strong>WhiskerSearch</strong>, sizi sahte bir arama motoru ile karşılayan, ancak tüm sonuçların <strong style="color:#D8C7FF;">ProfessorCat</strong> tarafından hazırlandığı interaktif bir deneyimdir.</p>
+
+      <h2>🔍 Sahte Arama Motoru</h2>
+      <div class="image-grid">
+        <div class="image-placeholder">📸 1<br><span class="hint">arama/1.png</span></div>
+        <div class="image-placeholder">📸 2<br><span class="hint">arama/2.png</span></div>
+        <div class="image-placeholder">📸 3<br><span class="hint">arama/3.png</span></div>
+      </div>
+      <p>Ne ararsanız arayın, sonuçlar ProfessorCat tarafından işlenmiştir.</p>
+
+      <h2>🎮 4 Aşamalı Oyun</h2>
+
+      <div class="info-card gallery-toggle" data-target="gallery-asama1" style="cursor:pointer;">
+        <h2>📚 Aşama 1: Ödev Desteği <span class="arrow">▶</span></h2>
+        <p>Ödev, sınav ve word görevlerinde yardım</p>
+        <div class="gallery-content" id="gallery-asama1">
+          <div class="image-grid">
+            <div class="image-placeholder">📸 1<br><span class="hint">asama1/1.png</span></div>
+            <div class="image-placeholder">📸 2<br><span class="hint">asama1/2.png</span></div>
+            <div class="image-placeholder">📸 3<br><span class="hint">asama1/3.png</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card gallery-toggle" data-target="gallery-asama2" style="cursor:pointer;">
+        <h2>🌿 Aşama 2: Çevre Koruma <span class="arrow">▶</span></h2>
+        <p>Ağaç dikme, atık ayırma, israfları bulma</p>
+        <div class="gallery-content" id="gallery-asama2">
+          <div class="image-grid-2">
+            <div class="image-placeholder">📸 1<br><span class="hint">asama2/1.png</span></div>
+            <div class="image-placeholder">📸 2<br><span class="hint">asama2/2.png</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card gallery-toggle" data-target="gallery-asama3" style="cursor:pointer;">
+        <h2>🍔 Aşama 3: Restoran Siparişi <span class="arrow">▶</span></h2>
+        <p>Salata, hamburger ve pizza yapımı</p>
+        <div class="gallery-content" id="gallery-asama3">
+          <div class="image-grid">
+            <div class="image-placeholder">📸 1<br><span class="hint">asama3/1.png</span></div>
+            <div class="image-placeholder">📸 2<br><span class="hint">asama3/2.png</span></div>
+            <div class="image-placeholder">📸 3<br><span class="hint">asama3/3.png</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card gallery-toggle" data-target="gallery-asama4" style="cursor:pointer;">
+        <h2>🏠 Aşama 4: Ev Düzenleme <span class="arrow">▶</span></h2>
+        <p>Salon, mutfak, yatak odası temizliği</p>
+        <div class="gallery-content" id="gallery-asama4">
+          <div class="image-grid">
+            <div class="image-placeholder">📸 1<br><span class="hint">asama4/1.png</span></div>
+            <div class="image-placeholder">📸 2<br><span class="hint">asama4/2.png</span></div>
+            <div class="image-placeholder">📸 3<br><span class="hint">asama4/3.png</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center; padding:20px 0; border-top:2px solid #eee; margin-top:20px;">
+        <p style="font-size:14px; color:#999;">💡 Galerileri açmak için başlıklara tıklayın</p>
+      </div>
+    </div>
+  `;
+  
+  const box = document.getElementById('browserContent');
+  box.innerHTML = content;
+  pushState('info', 'whiskersearch nedir', content, 'whiskersearch');
+  
+  document.querySelectorAll('.gallery-toggle').forEach(el => {
+    el.onclick = function() {
+      const target = this.getAttribute('data-target');
+      const content = document.getElementById(target);
+      const arrow = this.querySelector('.arrow');
+      if (content) {
+        content.classList.toggle('open');
+        if (arrow) arrow.classList.toggle('open');
+      }
+    };
+  });
+}
+
+function openTerminal() {
+  const content = `
+    <div class="page-content">
+      <h1>🖥️ Terminal Sistemi</h1>
+      <p>Terminal, görsel düğmeler veya grafiksel arayüzler kullanmadan, <strong>yalnızca klavyeden girilen komutlarla</strong> bilgisayarın işletim sistemine erişmeyi sağlayan bir araçtır.</p>
+
+      <div class="image-grid">
+        <div class="image-placeholder">📸 1<br><span class="hint">terminal/1.png</span></div>
+        <div class="image-placeholder">📸 2<br><span class="hint">terminal/2.png</span></div>
+      </div>
+
+      <div class="info-card highlight">
+        <h2>🔧 WhiskerSearch Terminal Sistemi</h2>
+        <p>Gerçek terminallerden ilham alınarak hazırlanmıştır.</p>
+      </div>
+
+      <div class="info-card">
+        <h2>📝 Örnek Komutlar</h2>
+        <div class="terminal-box">
+          > mkdir dosyalar<br>
+          > touch notlar.txt<br>
+          > cat notlar.txt<br>
+          > ls -la
+        </div>
+      </div>
+    </div>
+  `;
+  
+  const box = document.getElementById('browserContent');
+  box.innerHTML = content;
+  pushState('terminal', 'terminal', content, 'terminal');
+}
+
+function open404() {
+  const content = `
+    <div class="page-content">
+      <h1>❓ 404 Sayfası</h1>
+      <p><strong>WhiskerSearch 404 sayfası</strong>, kullanıcı yanlış bir sayfaya girdiğinde karşısına çıkan eğlenceli hata ekranıdır.</p>
+
+      <div class="image-placeholder">📸 1<br><span class="hint">404/1.png</span></div>
+
+      <div class="info-card highlight" style="border-color:#FF6B6B; background:#fff5f5;">
+        <h2>🐾 Ekran Mesajı</h2>
+        <p style="font-size:18px; font-style:italic;">"Bu sayfa belki patilerin arasında kaybolmuştur…"</p>
+      </div>
+
+      <div class="info-card">
+        <h2>🔙 Geri Dönüş</h2>
+        <p>Kullanıcı ana sayfaya geri dönebilir.</p>
+      </div>
+    </div>
+  `;
+  
+  const box = document.getElementById('browserContent');
+  box.innerHTML = content;
+  pushState('404', '404', content, '404');
+}
+
+function openContact() {
+  const content = `
+    <div class="page-content">
+      <h1>📧 İletişim Sayfası</h1>
+      <p>Kullanıcıların <strong>WhiskerSearch ekibiyle hızlı şekilde iletişime geçebilmesi</strong> için oluşturulmuştur.</p>
+
+      <div class="image-grid-2">
+        <div class="image-placeholder">📸 1<br><span class="hint">contact/1.png</span></div>
+        <div class="image-placeholder">📸 2<br><span class="hint">contact/2.png</span></div>
+      </div>
+
+      <div class="info-card highlight" style="border-color:#0984e3; background:#f0f8ff;">
+        <h2>📨 İletişim Kur Butonu</h2>
+        <p>Bu sayfada <strong>"İletişim Kur"</strong> butonu vardır. Butona tıklandığında kullanıcı doğrudan e-posta gönderme ekranına yönlendirilir.</p>
+        <div style="display:inline-block; background:linear-gradient(135deg, #CFEFFF, #D8C7FF, #FFD1E8); padding:12px 30px; border-radius:8px; color:white; font-weight:600; margin-top:10px;">📩 İletişim Kur</div>
+      </div>
+
+      <div class="info-card">
+        <h2>🎯 Kullanım Amacı</h2>
+        <ul>
+          <li>🐛 Hata bildirme</li>
+          <li>💡 Öneri sunma</li>
+          <li>💬 Geri bildirim verme</li>
+        </ul>
+      </div>
+    </div>
+  `;
+  
+  const box = document.getElementById('browserContent');
+  box.innerHTML = content;
+  pushState('contact', 'contact', content, 'contact');
+}
+
+function openFeedback() {
+  const content = `
+    <div class="page-content">
+      <h1>⭐ Feedback (Geri Bildirim) Sayfası</h1>
+      <p>Kullanıcıların WhiskerSearch hakkında deneyimlerini paylaşabildiği etkileşimli bir alandır.</p>
+
+      <div class="image-grid-2">
+        <div class="image-placeholder">📸 1<br><span class="hint">feedback/1.png</span></div>
+        <div class="image-placeholder">📸 2<br><span class="hint">feedback/2.png</span></div>
+      </div>
+
+      <div class="info-card highlight" style="border-color:#f39c12; background:#fffbeb;">
+        <h2>🐱 Kedi Slider (Puanlama Sistemi)</h2>
+        <p>Klasik puanlama yerine <strong>sürüklenebilir bir kedi slider</strong> bulunur.</p>
+      </div>
+
+      <div class="info-card highlight" style="border-color:#2ecc71; background:#e8f5e9;">
+        <h2>📊 Veri Toplama Sistemi</h2>
+        <p>Tüm geri bildirimler <strong>Google Tablolar (Google Sheets)</strong> üzerinde
